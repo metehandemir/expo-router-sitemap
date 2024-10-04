@@ -2,7 +2,7 @@
 
 ## Overview
 
-Inspired by this [X post] by @kadikraman, I figured it would be useful to come up with a script that could check an Expo Router project.
+Inspired by this [X post](https://x.com/kadikraman/status/1842249504877158810) by [@kadikraman](https://github.com/kadikraman), I figured it would be useful to come up with a script that could check an Expo Router project.
 
 ![image](https://github.com/user-attachments/assets/f0834464-d923-4636-b7b2-3b82840b606d)
 
