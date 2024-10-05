@@ -1,9 +1,16 @@
+#!/usr/bin/env bun
+
 import { readdir, stat } from "fs/promises";
 import { join, relative } from "path";
 
+const fmtRed = "\x1b[31m";
+const fmtReset = "\x1b[0m";
+const fmtBold = "\x1b[1m";
+
 const baseDirs = ["app", "src/app"];
 let basePath = "";
-let allPaths: string[] = []; // Array to hold all paths
+let pathMap = new Map<string, string[]>();
+let collisionsDetected = false;
 
 async function findAppDir(baseDirs: string[]) {
   for (const dir of baseDirs) {
@@ -29,7 +36,10 @@ async function traverseDir(dir: string, baseUrl = "") {
       await traverseDir(fullPath, join(baseUrl, entry.name));
     } else if (entry.isFile() && entry.name.endsWith(".tsx")) {
       const urlPath = convertPathToUrl(fullPath);
-      allPaths.push(urlPath);
+      if (!pathMap.has(urlPath)) {
+        pathMap.set(urlPath, []);
+      }
+      pathMap.get(urlPath)!.push(fullPath);
     }
   }
 }
@@ -54,8 +64,26 @@ async function main() {
     return;
   }
   await traverseDir(basePath);
-  allPaths.sort();
-  allPaths.forEach((path) => console.log(path));
+
+  let sortedUrls = Array.from(pathMap.keys()).sort();
+  sortedUrls.forEach((url) => {
+    const paths = pathMap.get(url);
+    if (paths!.length > 1) {
+      // Only log if there are collisions
+      console.log(url);
+      paths!.forEach((path) => console.log(` - ${fmtRed}${fmtBold}${path}${fmtReset}`));
+      collisionsDetected = true;
+    } else {
+      console.log(url);
+    }
+  });
+
+  if (!collisionsDetected) {
+    console.log("\n✅ No route collisions detected.");
+  } else {
+    console.log(`\n${fmtRed}❌${fmtReset} Collisions detected!`);
+    process.exit(1);
+  }
 }
 
 main();
