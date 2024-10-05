@@ -3,7 +3,12 @@
   "module": "index.ts",
   "type": "module",
   "devDependencies": {
-    "@types/bun": "latest"
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/npm": "^12.0.1",
+    "@types/bun": "latest",
+    "bun-plugin-dts": "^0.2.3",
+    "semantic-release": "^24.1.2"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
@@ -11,5 +16,10 @@
   "dependencies": {
     "fs": "^0.0.1-security",
     "path": "^0.12.7"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "semi": false,
+    "trailingComma": "all"
   }
 }
